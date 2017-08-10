@@ -2,17 +2,18 @@ package eon.ebs.engine;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameGestureListener implements GestureListener {
 
+	private MainLoop main;
 	private OrthographicCamera cam;
     private float initialScale = 2f;
-    private static final float PAN_RATE = (float) 0.01;
-    private static final float ZOOM_SPEED = (float) 0.009;
+    private static final float ZOOM_MIN = (float) 1f;
+    private static final float ZOOM_MAX = (float) 2.8f;
 	
-    public GameGestureListener(OrthographicCamera cam) {
+    public GameGestureListener(MainLoop main, OrthographicCamera cam) {
+    	this.main = main;
     	this.cam = cam;
     	this.cam.zoom = initialScale;
     }
@@ -54,9 +55,16 @@ public class GameGestureListener implements GestureListener {
    	@Override
    	public boolean zoom (float originalDistance, float currentDistance){
    	   float ratio = originalDistance / currentDistance;
-       cam.zoom = initialScale * ratio;
+   	   if(main.getMouseMode() == 0) return false;
+   	   cam.zoom = initialScale * ratio;
+       checkLimits();
 	   return false;
    	}
+
+   	private void checkLimits() {
+   		if(cam.zoom >= ZOOM_MAX) cam.zoom = ZOOM_MAX;
+   		if(cam.zoom <= ZOOM_MIN) cam.zoom = ZOOM_MIN;
+	}
 
    	@Override
 	public void pinchStop () {

@@ -2,17 +2,94 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <ImageView
-        android:id="@+id/imgView_land"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/col_imgeuropa"
-        android:src="@drawable/europa" />
 
-    <include layout="@layout/menuinterface" />
+    <ImageView
+            android:id="@+id/imgView_land"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/col_imgeuropa"
+            android:src="@drawable/europa"/>
+    <GridLayout
+            android:id="@+id/dragdropLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:columnCount="1"
+            android:orientation="horizontal">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill_horizontal|top"
+                android:clipChildren="false">
+
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp">
+
+                <ProgressBar
+                        android:id="@+id/progressLevelBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="47dp"
+                        android:background="@drawable/circle_shape"
+                        android:indeterminate="false"
+                        android:indeterminateBehavior="repeat"
+                        android:max="100"
+                        android:progress="25"
+                        android:progressDrawable="@drawable/circular_progress_bar" android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="47dp"
+                        android:background="#00000000"
+                        android:gravity="center"
+                        android:text="25"
+                        android:textColor="@color/col_black" android:id="@+id/levelText"
+                        android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" android:layout_alignLeft="@+id/progressLevelBar"
+                        android:layout_alignStart="@+id/progressLevelBar"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_gravity="right|center_vertical"
+                android:layout_row="0"
+                android:orientation="vertical">
+
+            <ImageView
+                    android:id="@+id/imgViewPersonData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/businessperson"/>
+
+            <ImageView
+                    android:id="@+id/imgViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/mapsicon"/>
+
+            <ImageView
+                    android:id="@+id/imgView_Budget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/coin"/>
+
+        </LinearLayout>
+
+    </GridLayout>
 
 </RelativeLayout>

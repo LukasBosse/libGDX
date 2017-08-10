@@ -1,7 +1,5 @@
 package eon.ebs.engine;
 
-import com.mygdx.game.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +15,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import com.mygdx.game.R;
 import eon.ebs.dialogs.MessageBox;
 import eon.ebs.sounds.SoundSystem;
 
@@ -46,7 +45,7 @@ public class Europa extends Activity implements OnTouchListener {
 		 		 
 		 imgDrawable = imgView.getDrawable();
 		 bitmap = ((BitmapDrawable) imgDrawable).getBitmap();
-				 		 
+
 	}
 	
 	@SuppressWarnings("static-access")

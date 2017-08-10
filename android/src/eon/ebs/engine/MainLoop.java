@@ -7,14 +7,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
-import eon.ebs.entities.CoalPlant;
-import eon.ebs.entities.PowerPlant;
-import eon.ebs.entities.Tile;
+import eon.ebs.entities.*;
+import eon.ebs.utils.CameraActions;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,18 +23,18 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 	private IsometricTiledMapRenderer tiledMapRenderer;
 	//Camera
 	private OrthographicCamera camera;
-	private int mouseMode = 0;
+	private int mouseMode = 1;
 	//Map
-	private TiledMap tiledMap;
-	private TiledMapTileLayer layer;
-	private TiledMapTileLayer gridLayer;
+    private Grid grid;
 	private float tilePixelWidth; // = 100px
 	private float tilePixelHeight; // = 50px
 	//Picking
 	private Vector3 lastPoint = new Vector3(-1,-1,-1);
-	private int selectedItem = 0;
-	private List<Tile> tileList = new LinkedList<Tile>();
-	
+    private List<Tile> tileList = new LinkedList<>();
+    private boolean editing = false;
+    private int selectedItem = 0;
+    private Tile newTile;
+
 	public MainLoop(AndroidLauncher ui) {
 		this.ui = ui;
 	}
@@ -52,22 +48,23 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
         camera = new OrthographicCamera();
         camera.setToOrtho(false,w,h);
         camera.update();
-        
-        tiledMap = new TmxMapLoader().load("NuclearPlant.tmx");
-        tiledMapRenderer = new IsometricTiledMapRenderer(tiledMap);
-       
-        layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-		gridLayer = (TiledMapTileLayer) tiledMap.getLayers().get(2);
-             
-        tilePixelWidth = layer.getTileWidth();
-        tilePixelHeight = layer.getTileHeight();
-                
-        GestureDetector gd = new GestureDetector(new GameGestureListener(camera));
+
+        grid = new Grid(this);
+        tiledMapRenderer = new IsometricTiledMapRenderer(grid.getTiledMap());
+
+        tilePixelWidth = grid.getLayer().getTileWidth();
+        tilePixelHeight = grid.getLayer().getTileHeight();
+
+		CameraActions.centerCamera(grid.getTiledMap(), camera);
+
+        GestureDetector gd = new GestureDetector(new GameGestureListener(this, camera));
 		InputMultiplexer im = new InputMultiplexer(gd, this);
 		Gdx.input.setInputProcessor(im);
 
 	}
-	
+
+	//Render Method
+
 	@Override
 	public void render() {
 	  	Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -77,64 +74,73 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 	}
+
+	//Place ground object
 	
 	private void checkTouch() {
-		if(lastPoint != new Vector3(-1,-1,-1) && mouseMode == 1 && selectedItem != 0) {
+		if(lastPoint != new Vector3(-1,-1,-1) && mouseMode == 0 && selectedItem != 0 && !editing) {
 			int x = (int) lastPoint.x;
 			int y = (int) lastPoint.y;
-			if(gridLayer.getCell(x, y) != null) {
-				Tile newTile;
-				if(selectedItem == 1) {
-					newTile = new PowerPlant(x,y);
-				} else {
-					newTile = new CoalPlant(x,y);
-				}
-				if(!checkIntersection(newTile,x,y)) {
-					gridLayer.getCell(x, y).setTile(tiledMap.getTileSets().getTile(85));
-					tileList.add(newTile);
-					System.out.println("ITEM CHANGED=" + selectedItem);
-				}
-				selectedItem = 0;
-				pushSelectedItem();
+			if(grid.getGridLayer().getCell(x, y) != null) {
+				if (grid.getGroundObjects().getCell(x, y) != null) {
+					if (selectedItem == 1) {
+						newTile = new PowerPlant(x, y);
+					} else {
+						newTile = new CoalPlant(x, y);
+					}
+					if (!checkIntersection(newTile, x, y)) {
+                        editing = true;
+                        grid.getGroundObjects().getCell(x, y).setTile(grid.getTiledMap().getTileSets().getTile(newTile.getTileID()));
+						tileList.add(newTile);
+					}
+			}
 			}
 		}
 	}
-	
+
+    //Checks tile and object intersection
+
 	private boolean checkIntersection(Tile newTile, int x, int y) {
+		boolean blocked = false;
 		for(Tile tile : tileList) {
 			if(tile.getBounding().contains(newTile.getBounding())) {
-				return true;
+				blocked = true;
 			}
 		}
-		return false;
+		for (y = 0; y < grid.getGroundObjects().getHeight(); y++) {
+			for (x = 0; x < grid.getGroundObjects().getWidth(); x++) {
+				if (grid.getGroundObjects().getCell(x, y) != null && grid.getGroundObjects().getCell(x, y).getTile().getProperties().containsKey("Blocked")) {
+					blocked = true;
+				}
+			}
+		}
+		return blocked;
 	}
-	
-	private void pushSelectedItem() {
-		this.ui.setSelectedItem(0);
-	}
-	
-	protected void setSelectedItem(int i) {
+
+	//Set selected item
+
+    protected void setSelectedItem(int i) {
 		this.selectedItem = i + 1;
 	}
-	
-	protected void setGrid() {
-		if(gridLayer.isVisible()) {
-			gridLayer.setVisible(false);
-			mouseMode = 0;
-		} else {
-			gridLayer.setVisible(true);
-			mouseMode = 1;
-		}
-	}
-	
-	private Vector3 worldToIso(Vector3 point, int tileWidth, int tileHeight) {
-	    camera.unproject(point);
-	    point.x /= tileWidth;
-	    point.y = (point.y - tileHeight / 2) / tileHeight + point.x;
-	    point.x -= point.y - point.x;
-	    return point;
-	}
-		
+
+	protected Grid getGrid() {
+	    return grid;
+    }
+
+    public void setMouseModus(int modus) {
+	    this.mouseMode = modus;
+    }
+
+    protected int getMouseMode() {
+	    return mouseMode;
+    }
+
+    protected boolean isEditing() { return editing; }
+
+    protected void setEditing(boolean editing) { this.editing = editing; }
+
+	//App Lifecycle
+
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -161,6 +167,8 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 		return false;
 	}
 
+	//Input Listener
+
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
@@ -175,9 +183,8 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		lastPoint = worldToIso(new Vector3(x,y,0),(int)tilePixelWidth,(int)tilePixelHeight);
+	    lastPoint = CameraActions.worldToIso(camera, new Vector3(x,y,0),(int)tilePixelWidth,(int)tilePixelHeight);
 		if(lastPoint.x >= 0 && lastPoint.y >= 0) checkTouch();
-		System.out.println("TOUCHED: X=" +  (int) lastPoint.x + " Y=" + (int) lastPoint.y + " Z=" + (int) lastPoint.z);
 		return false;
 	}
 
@@ -189,9 +196,22 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		float x = Gdx.input.getDeltaX();
-		float y = Gdx.input.getDeltaY();
-		camera.translate(-x,y);
+		if(mouseMode == 0 && editing) {
+            Vector3 point = CameraActions.worldToIso(camera, new Vector3(screenX,screenY,0),(int)tilePixelWidth,(int)tilePixelHeight);
+            if(grid.getGroundObjects().getCell(newTile.getX(), newTile.getY()) != null) {
+                grid.getGroundObjects().getCell(newTile.getX(), newTile.getY()).setTile(grid.getTiledMap().getTileSets().getTile(new EmptyTile(newTile.getX()
+                        , newTile.getY()).getTileID()));
+                newTile.setX((int) point.x);
+                newTile.setY((int) point.y);
+                if (grid.getGroundObjects().getCell(newTile.getX(), newTile.getY()) != null) {
+                    grid.getGroundObjects().getCell(newTile.getX(), newTile.getY()).setTile(grid.getTiledMap().getTileSets().getTile(newTile.getTileID()));
+                }
+            }
+		} else {
+            float x = Gdx.input.getDeltaX();
+            float y = Gdx.input.getDeltaY();
+            camera.translate(-x, y);
+        }
 		return false;
 	}
 

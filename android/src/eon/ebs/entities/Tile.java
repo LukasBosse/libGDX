@@ -8,16 +8,22 @@ public class Tile {
 	private int y;
 	private int width;
 	private int height;
+	private int tileID;
 	private Rectangle bounding;
 	
-	public Tile(int x, int y, int width, int height) {
+	public Tile(int x, int y, int width, int height, int tileID) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.tileID = tileID;
 		this.bounding = new Rectangle(x,y,width,height);
 	}
-	
+
+	public int getTileID() { return tileID; }
+
+	public void setTileID(int tileID) { this.tileID = tileID; }
+
 	public Rectangle getBounding() {
 		return bounding;
 	}

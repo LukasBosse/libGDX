@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="dirt" tilewidth="390" tileheight="308" tilecount="72" columns="0">
+<tileset name="dirt" tilewidth="390" tileheight="308" tilecount="75" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="15">
   <image width="100" height="66" source="roadTiles/png/dirtHigh.png"/>
@@ -212,9 +212,18 @@
   <image width="390" height="308" source="powerplant.png"/>
  </tile>
  <tile id="85">
-  <image width="256" height="256" source="coalplant.png"/>
+  <image width="210" height="188" source="coalplant.png"/>
  </tile>
  <tile id="86">
   <image width="100" height="65" source="border.png"/>
+ </tile>
+ <tile id="87">
+  <image width="100" height="65" source="withoutborder.png"/>
+ </tile>
+ <tile id="88">
+  <image width="50" height="50" source="correctbtn.png"/>
+ </tile>
+ <tile id="89">
+  <image width="50" height="50" source="undobtn.png"/>
  </tile>
 </tileset>

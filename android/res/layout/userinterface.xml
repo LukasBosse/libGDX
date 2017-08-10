@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+                android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical" >
 
@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:columnCount="1"
@@ -57,6 +58,34 @@
                 android:visibility="invisible" >
 
             </GridView>
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp">
+
+                <ProgressBar
+                        android:id="@+id/progressLevelBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="47dp"
+                        android:background="@drawable/circle_shape"
+                        android:indeterminate="false"
+                        android:indeterminateBehavior="repeat"
+                        android:max="100"
+                        android:progress="25"
+                        android:progressDrawable="@drawable/circular_progress_bar" android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="47dp"
+                        android:background="#00000000"
+                        android:gravity="center"
+                        android:text="25"
+                        android:textColor="@color/col_black" android:id="@+id/levelText"
+                        android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" android:layout_alignLeft="@+id/progressLevelBar"
+                        android:layout_alignStart="@+id/progressLevelBar"/>
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -64,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="end|center_vertical"
             android:layout_row="0"
             android:orientation="vertical" >
 
@@ -73,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/businessperson" />
 
@@ -95,31 +125,11 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_gravity="right|top"
+            android:layout_gravity="end|top"
             android:layout_row="0"
             android:baselineAligned="true"
             android:gravity="center"
             android:orientation="vertical" >
-
-            <ProgressBar
-                android:id="@+id/progressLevelBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:background="@drawable/circle_shape"
-                android:indeterminate="false"
-                android:indeterminateBehavior="repeat"
-                android:max="100"
-                android:progress="25"
-                android:progressDrawable="@drawable/circular_progress_bar" />
-
-            <TextView
-                android:id="@+id/txtLevel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="TextView"
-                android:textColorHint="@color/col_tools" />
 
         </LinearLayout>
 
@@ -131,7 +141,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/mousegrab" />
 
@@ -139,7 +151,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/btn_grabPointer"
-        android:layout_toLeftOf="@id/btn_grabPointer" >
+        android:layout_toLeftOf="@id/btn_grabPointer"
+        android:layout_toStartOf="@id/btn_grabPointer">
 
         <Button
             android:id="@+id/btn_undoChange"

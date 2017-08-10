@@ -11,7 +11,7 @@ public class SoundStorage extends SharedPreferencesModul {
 	}
 	
 	/**
-	 * Speichern der Audioeinstellungen in den SharedPreferences unter den Schlüsseln soundVolLeft und soundVolRight
+	 * Speichern der Audioeinstellungen in den SharedPreferences unter den Schluesseln soundVolLeft und soundVolRight
 	 * @param l
 	 * @param r
 	 */
