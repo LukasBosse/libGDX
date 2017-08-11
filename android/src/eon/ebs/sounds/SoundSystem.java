@@ -1,12 +1,12 @@
 package eon.ebs.sounds;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+
+import java.io.IOException;
 
 public class SoundSystem implements OnCompletionListener {
 	
@@ -14,8 +14,7 @@ public class SoundSystem implements OnCompletionListener {
 	private static AssetFileDescriptor 	afd;
 	private static int 					leftVol = 50;
 	private static int					rightVol = 50;
-	private static SoundStorage			soundStorage;
-		
+
 	public SoundSystem() {
 		mediaPlayer.setOnCompletionListener(this);
 	}
@@ -29,7 +28,6 @@ public class SoundSystem implements OnCompletionListener {
 	public static void initalSound(Context context, String path) {
 		try {
 			afd = context.getAssets().openFd(path);
-			soundStorage = new SoundStorage(context);
 			loadAudioSettings();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,12 +60,7 @@ public class SoundSystem implements OnCompletionListener {
 		mediaPlayer.reset(); 
 	}
 	
-	/**
-	 * Versetzen der aktuellen Audioeinstellungen
-	 * @param l
-	 * @param r
-	 */
-	
+
 	public static void setVol(Point sound) {
 		leftVol = sound.x;
 		rightVol = sound.y;
@@ -78,7 +71,7 @@ public class SoundSystem implements OnCompletionListener {
 	 */
 		
 	private static void loadAudioSettings() {
-		setVol(soundStorage.getVol());
+		//setVol(soundStorage.getVol());
 	}
 	
 	/**

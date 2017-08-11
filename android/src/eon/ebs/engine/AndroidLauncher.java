@@ -20,9 +20,17 @@ import eon.ebs.layouts.ImageItem;
 import java.util.ArrayList;
 
 public class AndroidLauncher extends AndroidApplication implements OnClickListener {
-	
+
+	/*****************************************************
+	 * EnergyWorld - AndroidLauncher					 *
+	 * Main class for settings and interaction with GUI. *
+	 * @author Lukas Bosse								 *
+	 * @version 1.0.0									 *
+	 * @date 11/08/17									 *
+	 ****************************************************/
+
 	private MainLoop				mainLoop;
-	private Player                  player = new Player("John Doe");
+	private Player                  player;
 
 	private Button 					btn_tools;
 	private Button					btn_grabPointer;
@@ -37,15 +45,18 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 	
 	private int						mouseModus = 1;
 	private int						selectedItem = 0;
-				
+
+    /** OnCreate method for setting up application configuration, selected views and gui
+     *  @param savedInstanceState **/
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		mainLoop = new MainLoop(this);
+        player = mainLoop.getPlayer();
 		setContentView(R.layout.userinterface);
-		
 		GridLayout rel = (GridLayout) findViewById(R.id.gameBg);
 		View view = initializeForView(mainLoop, config);
 		rel.addView(view);
@@ -53,7 +64,9 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 		configGUI();
 		
 	}
-	
+
+	/** Declare and initalize gui objects from layout 'userinterface' **/
+
 	private void configGUI() {
 
 		btn_tools = (Button) findViewById(R.id.btn_tools);
@@ -90,16 +103,24 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 
 	}
 
+	/** Push position of selected toolbox item to mainloop class
+     *  @param selectedItem **/
+
 	private void pushPosition(int selectedItem) {
 		showAcceptanceButtons();
 		this.selectedItem = selectedItem;
 		this.mainLoop.setSelectedItem(this.selectedItem);
 	}
-	
+
+	/** Push mouse mode to mainloop class **/
+
 	private void pushModus() {
 		mainLoop.getGrid().setGrid(mouseModus);
 	}
-	
+
+	/** Set image as icon for toolbox list entity
+     *  @return imageItems **/
+
 	private ArrayList<ImageItem> getData() {
        final ArrayList<ImageItem> imageItems = new ArrayList<>();
        TypedArray imgs = getResources().obtainTypedArray(R.array.image_ids);
@@ -111,7 +132,7 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
         return imageItems;
 	 }
 						
-	/** Einblenden der Toolbox */
+	/** Fade in - Toolbox **/
 
 	private void showMenu() {
 		if(mainLoop.isEditing()) return;
@@ -120,7 +141,7 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 		btn_tools.setText("<");
 	}
 
-	/** Ausblenden der Toolbox */
+	/** Fade out - Toolbox **/
 
 	private void hideMenu() {
 		gridView.setVisibility(View.INVISIBLE);
@@ -128,29 +149,41 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 		btn_tools.setText(">");
 	}
 
+	/** Set visibility of 'Acceptance Button' to true **/
+
 	private void showAcceptanceButtons() {
 		btn_saveChange.setVisibility(View.VISIBLE);
 		btn_undoChange.setVisibility(View.VISIBLE);
 	}
+
+	/** Set visibility of 'Acceptance Button' to false **/
 
 	private void hideAcceptanceButtons() {
 		btn_saveChange.setVisibility(View.INVISIBLE);
 		btn_undoChange.setVisibility(View.INVISIBLE);
 	}
 
+	/** Reset selected item and push mouse mode to mainloop class **/
+
 	private void clearSelection() {
 		selectedItem = 0;
 		pushModus();
 	}
 
+	/** Set background of mode button to pointer **/
+
 	private void showPointer() {
         btn_grabPointer.setBackground(getResources().getDrawable(R.drawable.mousepointer));
     }
 
+    /** Set background of mode button to grab **/
+
     private void showGrab() {
         btn_grabPointer.setBackground(getResources().getDrawable(R.drawable.mousegrab));
     }
-	
+
+    /** OnClick-Listener **/
+
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -208,5 +241,18 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 			}
 		}
 	}
-	
+
+	/** Application lifecycle **/
+
+    @Override
+    public void onResume() {
+        super.onResume();
+	}
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
 }

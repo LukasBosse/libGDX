@@ -24,6 +24,9 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    dependencies {
+        compile 'com.google.code.gson:gson:2.7'
+    }
     buildTypes {
         release {
             minifyEnabled false

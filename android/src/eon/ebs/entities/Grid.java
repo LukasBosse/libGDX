@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import eon.ebs.engine.MainLoop;
 
-public class Grid {
+public class Grid  {
 
     private MainLoop mainLoop;
 

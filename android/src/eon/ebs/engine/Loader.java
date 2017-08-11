@@ -1,7 +1,5 @@
 package eon.ebs.engine;
 
-import com.mygdx.game.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,11 +9,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.mygdx.game.R;
 
 public class Loader extends Activity {
 
+	//Progress Management
 	private ProgressBar prog_loader;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,7 +25,7 @@ public class Loader extends Activity {
 		setContentView(R.layout.loader);
 		initGUI();
 	}
-	
+
 	private void initGUI() {
 		prog_loader = (ProgressBar) findViewById(R.id.prog_loader);
 		new BackgroundAsyncTask().execute();
@@ -38,7 +38,7 @@ public class Loader extends Activity {
 		protected void onPostExecute(Void result) {
 			Toast.makeText(Loader.this,"Fertig!!", Toast.LENGTH_LONG).show();
 			Intent mainPage = new Intent(Loader.this, Europa.class);
-            startActivity(mainPage);
+			startActivity(mainPage);
 		}
 
 		protected void onPreExecute() {

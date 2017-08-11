@@ -10,6 +10,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import eon.ebs.entities.*;
+import eon.ebs.storage.SharedPreferencesModul;
 import eon.ebs.utils.CameraActions;
 
 import java.util.LinkedList;
@@ -34,32 +35,46 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
     private boolean editing = false;
     private int selectedItem = 0;
     private Tile newTile;
+    //Local Storage Management
+    private SharedPreferencesModul storage;
+    //Entites
+    private Player player;
 
 	public MainLoop(AndroidLauncher ui) {
-		this.ui = ui;
+        this.ui = ui;
+        storage = new SharedPreferencesModul(ui);
+        manageStorage();
 	}
+
+    private void manageStorage() {
+	    if(!storage.isNotFirstStart()) {
+            storage.createStart();
+        }
+        player = storage.getPlayerFromStorage();
+    }
 
 	@Override
 	public void create() {
-		
-		float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false,w,h);
-        camera.update();
+            float w = Gdx.graphics.getWidth();
+            float h = Gdx.graphics.getHeight();
 
-        grid = new Grid(this);
-        tiledMapRenderer = new IsometricTiledMapRenderer(grid.getTiledMap());
+            camera = new OrthographicCamera();
+            camera.setToOrtho(false, w, h);
+            camera.update();
 
-        tilePixelWidth = grid.getLayer().getTileWidth();
-        tilePixelHeight = grid.getLayer().getTileHeight();
+            grid = new Grid(this);
 
-		CameraActions.centerCamera(grid.getTiledMap(), camera);
+            tiledMapRenderer = new IsometricTiledMapRenderer(grid.getTiledMap());
 
-        GestureDetector gd = new GestureDetector(new GameGestureListener(this, camera));
-		InputMultiplexer im = new InputMultiplexer(gd, this);
-		Gdx.input.setInputProcessor(im);
+            tilePixelWidth = grid.getLayer().getTileWidth();
+            tilePixelHeight = grid.getLayer().getTileHeight();
+
+            CameraActions.centerCamera(grid.getTiledMap(), camera);
+
+            GestureDetector gd = new GestureDetector(new GameGestureListener(this, camera));
+            InputMultiplexer im = new InputMultiplexer(gd, this);
+            Gdx.input.setInputProcessor(im);
 
 	}
 
@@ -73,7 +88,7 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-	}
+    }
 
 	//Place ground object
 	
@@ -226,5 +241,9 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	protected Player getPlayer() {
+	    return player;
+    }
 	
 }
