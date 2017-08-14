@@ -40,6 +40,13 @@
                   android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
         </activity>
         <activity android:name="eon.ebs.dialogs.PlayerBox"
+                                android:label="@string/app_name"
+                                android:screenOrientation="landscape"
+                                android:theme="@android:style/Theme.Dialog"
+                                android:excludeFromRecents="true"
+                                android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name="eon.ebs.dialogs.BudgetBox"
                   android:label="@string/app_name"
                   android:screenOrientation="landscape"
                   android:theme="@android:style/Theme.Dialog"

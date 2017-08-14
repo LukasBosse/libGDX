@@ -12,6 +12,7 @@ import android.widget.*;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.mygdx.game.R;
+import eon.ebs.dialogs.BudgetBox;
 import eon.ebs.dialogs.PlayerBox;
 import eon.ebs.entities.Player;
 import eon.ebs.layouts.GridViewAdapter;
@@ -37,13 +38,15 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 	private Button					btn_saveChange;
 	private Button					btn_undoChange;
 	private ImageView               btn_userInfo;
+	private ImageView				btn_budget;
+	private ImageView				btn_location;
 	private TextView				level;
 	private ProgressBar				levelProgress;
-	
+
 	private GridView 				gridView;
 	private GridViewAdapter 		gridAdapter;
 	
-	private int						mouseModus = 1;
+	private int						mouseMode = 1;
 	private int						selectedItem = 0;
 
     /** OnCreate method for setting up application configuration, selected views and gui
@@ -74,6 +77,8 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 		btn_saveChange = (Button) findViewById(R.id.btn_saveChange);
 		btn_undoChange = (Button) findViewById(R.id.btn_undoChange);
         btn_userInfo = (ImageView) findViewById(R.id.imgViewPersonData);
+		btn_location = (ImageView) findViewById(R.id.imgViewLocation);
+		btn_budget = (ImageView) findViewById(R.id.imgView_Budget);
 
 		levelProgress = (ProgressBar) findViewById(R.id.progressLevelBar);
 		level = (TextView) findViewById(R.id.levelText);
@@ -94,12 +99,14 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 				pushPosition(position);
 			}
 		});
-               
+
 		btn_tools.setOnClickListener(this);
 		btn_grabPointer.setOnClickListener(this);
 		btn_saveChange.setOnClickListener(this);
 		btn_undoChange.setOnClickListener(this);
         btn_userInfo.setOnClickListener(this);
+		btn_location.setOnClickListener(this);
+		btn_budget.setOnClickListener(this);
 
 	}
 
@@ -115,7 +122,7 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 	/** Push mouse mode to mainloop class **/
 
 	private void pushModus() {
-		mainLoop.getGrid().setGrid(mouseModus);
+		mainLoop.getGrid().setGrid(mouseMode);
 	}
 
 	/** Set image as icon for toolbox list entity
@@ -196,14 +203,14 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 				break;
 			}
 			case R.id.btn_grabPointer: {
-				if(mouseModus == 0) { // Pick-Modus
+				if(mouseMode == 0) {
                     hideMenu();
 					showPointer();
-					mouseModus = 1;
-				} else { //Move-Modus
+					mouseMode = 1;
+				} else {
                     showMenu();
                     showGrab();
-					mouseModus = 0;
+					mouseMode = 0;
 				}
 				pushModus();
 				break;
@@ -214,7 +221,7 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
                 hideMenu();
                 showPointer();
 				mainLoop.setEditing(false);
-                mouseModus = 1;
+				mouseMode = 1;
                 pushModus();
                 break;
 			}
@@ -224,19 +231,25 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
                 hideMenu();
                 showPointer();
 				mainLoop.setEditing(false);
-                mouseModus = 1;
+				mouseMode = 1;
                 pushModus();
                 break;
 			}
 			case R.id.imgView_Budget: {
-	//			Intent mainPage = new Intent(Game.this, BudgetBox.class);
-	//			startActivity(mainPage);
+				Intent mainPage = new Intent(AndroidLauncher.this, BudgetBox.class);
+				mainPage.putExtra("PLAYERINFO", player);
+				startActivity(mainPage);
 				break;
 			}
 			case R.id.imgViewPersonData: {
 				Intent mainPage = new Intent(AndroidLauncher.this, PlayerBox.class);
 				mainPage.putExtra("PLAYERINFO", player);
 				startActivity(mainPage);
+				break;
+			}
+			case R.id.imgViewLocation: {
+                Intent mainPage = new Intent(AndroidLauncher.this, Europa.class);
+                startActivity(mainPage);
 				break;
 			}
 		}
@@ -246,12 +259,11 @@ public class AndroidLauncher extends AndroidApplication implements OnClickListen
 
     @Override
     public void onResume() {
-        super.onResume();
+    	super.onResume();
 	}
 
     @Override
     public void onPause() {
-
         super.onPause();
     }
 

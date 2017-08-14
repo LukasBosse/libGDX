@@ -18,27 +18,40 @@ import java.util.List;
 
 public class MainLoop extends ApplicationAdapter implements InputProcessor {
 
+    /*****************************************************
+     * EnergyWorld - MainLoop       					 *
+     * Main class for rendering and input handling       *
+     * @author Lukas Bosse								 *
+     * @version 1.0.0									 *
+     * @date 11/08/17									 *
+     ****************************************************/
+
 	//UI
-	private AndroidLauncher ui;
+	private AndroidLauncher             ui;
 	//Rendering
-	private IsometricTiledMapRenderer tiledMapRenderer;
+	private IsometricTiledMapRenderer   tiledMapRenderer;
 	//Camera
-	private OrthographicCamera camera;
-	private int mouseMode = 1;
+	private OrthographicCamera          camera;
+	private int                         mouseMode = 1;
 	//Map
-    private Grid grid;
-	private float tilePixelWidth; // = 100px
-	private float tilePixelHeight; // = 50px
+    private Grid                        grid;
+	private float                       tilePixelWidth; // = 100px
+	private float                       tilePixelHeight; // = 50px
 	//Picking
-	private Vector3 lastPoint = new Vector3(-1,-1,-1);
-    private List<Tile> tileList = new LinkedList<>();
-    private boolean editing = false;
-    private int selectedItem = 0;
-    private Tile newTile;
+	private Vector3                     lastPoint = new Vector3(-1,-1,-1);
+    private List<Tile>                  tileList = new LinkedList<>();
+    private boolean                     editing = false;
+    private int                         selectedItem = 0;
+    private Tile                        newTile;
     //Local Storage Management
-    private SharedPreferencesModul storage;
+    private SharedPreferencesModul      storage;
     //Entites
-    private Player player;
+    private Player                      player;
+
+	/**
+	 * Constructor for MainLoop class.
+	 * @param ui
+	 */
 
 	public MainLoop(AndroidLauncher ui) {
         this.ui = ui;
@@ -46,12 +59,20 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
         manageStorage();
 	}
 
+    /**
+     * Storage manager checks if game content is available, if not create new one else load.
+     */
+
     private void manageStorage() {
 	    if(!storage.isNotFirstStart()) {
             storage.createStart();
         }
         player = storage.getPlayerFromStorage();
     }
+
+    /**
+     * Oncreate method for setting up display, grid, renderer and camera.
+     */
 
 	@Override
 	public void create() {
@@ -78,7 +99,7 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 
 	}
 
-	//Render Method
+    /** Render method **/
 
 	@Override
 	public void render() {
@@ -90,7 +111,7 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.render();
     }
 
-	//Place ground object
+	/** Method place selected ground object **/
 	
 	private void checkTouch() {
 		if(lastPoint != new Vector3(-1,-1,-1) && mouseMode == 0 && selectedItem != 0 && !editing) {
@@ -113,7 +134,7 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 		}
 	}
 
-    //Checks tile and object intersection
+    /** Checks tile and object intersection **/
 
 	private boolean checkIntersection(Tile newTile, int x, int y) {
 		boolean blocked = false;
@@ -132,29 +153,59 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 		return blocked;
 	}
 
-	//Set selected item
+	/**
+     * Set selected item
+     * @param i
+     **/
 
     protected void setSelectedItem(int i) {
 		this.selectedItem = i + 1;
 	}
 
+	/**
+     * Getter method for Grid object
+     * @return grid
+     **/
+
 	protected Grid getGrid() {
 	    return grid;
     }
 
-    public void setMouseModus(int modus) {
-	    this.mouseMode = modus;
+    /**
+     * Set mouse mode
+     * @param mode
+     **/
+
+    public void setMouseModus(int mode) {
+	    this.mouseMode = mode;
     }
+
+    /**
+     * Getter method for mouse mode
+     * @return mouseMode
+     **/
 
     protected int getMouseMode() {
 	    return mouseMode;
     }
 
+    /**
+     * Getter for editing mode
+     * @return editing
+     **/
+
     protected boolean isEditing() { return editing; }
+
+    /**
+     * Set editing mode
+     * @param editing
+     **/
 
     protected void setEditing(boolean editing) { this.editing = editing; }
 
-	//App Lifecycle
+    /**
+     * App Lifecycle
+     **/
 
 	@Override
 	public void dispose() {
@@ -182,7 +233,7 @@ public class MainLoop extends ApplicationAdapter implements InputProcessor {
 		return false;
 	}
 
-	//Input Listener
+	/** Input Listener **/
 
 	@Override
 	public boolean keyUp(int keycode) {

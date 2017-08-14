@@ -8,7 +8,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowFullscreen">true</item>
     </style>
-    
+
     <color name="col_tools">#FFFFFF</color>
     <color name="col_imgeuropa">#6EADB7</color>
     <color name="col_black">#000000</color>

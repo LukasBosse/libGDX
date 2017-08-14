@@ -26,6 +26,7 @@ android {
     }
     dependencies {
         compile 'com.google.code.gson:gson:2.7'
+        compile 'com.jjoe64:graphview:4.2.1'
     }
     buildTypes {
         release {
@@ -137,4 +138,8 @@ idea {
             }
         }
     }
+}
+
+dependencies {
+    compile 'com.android.support:design:25.3.1'
 }
