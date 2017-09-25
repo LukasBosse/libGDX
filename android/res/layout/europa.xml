@@ -13,7 +13,7 @@
             android:layout_alignParentTop="true"
             android:background="@color/col_imgeuropa"
             android:src="@drawable/europa"
-        android:layout_above="@+id/imageView2" />
+        android:layout_alignParentBottom="true" />
 
     <ProgressBar
         android:id="@+id/progressLevelBar"
@@ -86,6 +86,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:visibility="visible"
-        app:srcCompat="@drawable/eonlogo" />
+        app:srcCompat="@drawable/eon_logo_seethrough" />
 
 </RelativeLayout>
